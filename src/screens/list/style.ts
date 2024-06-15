@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {accent, primary, textColor} from '../../constants/colors';
+import {accent, gray, primary, textColor} from '../../constants/colors';
 
 const getStyling = () => {
   return StyleSheet.create({
@@ -35,6 +35,7 @@ const getStyling = () => {
     },
     filterIconTextContainer: {
       flexDirection: 'row',
+      alignItems: 'center',
     },
     filterContainer: {
       justifyContent: 'center',
@@ -43,6 +44,45 @@ const getStyling = () => {
     filterText: {
       color: textColor,
       fontSize: 16,
+    },
+    listContainer: {
+      position: 'relative',
+      flex: 1,
+      marginTop: 8,
+    },
+    listItemContainer: {
+      backgroundColor: gray,
+      marginTop: 8,
+      height: 50,
+      paddingHorizontal: 10,
+      alignItems: 'center',
+      borderRadius: 8,
+      flexDirection: 'row',
+    },
+    listItemNumberContainer: {},
+    listItemNumberCircle: {
+      width: 30,
+      height: 30,
+      borderColor: accent,
+      borderRadius: 15,
+      borderWidth: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    listItemNumber: {
+      color: accent,
+    },
+    listItemDetailsContainer: {
+      flex: 1,
+      marginLeft: 10,
+    },
+    listItemDetailsNameText: {
+      color: textColor,
+      fontSize: 16,
+    },
+    listItemDetailsNumberText: {
+      color: textColor,
+      marginTop: 3,
     },
   });
 };

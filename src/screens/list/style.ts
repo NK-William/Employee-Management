@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import {accent, gray, primary, textColor} from '../../constants/colors';
 
 const getStyling = () => {
@@ -83,6 +83,56 @@ const getStyling = () => {
     listItemDetailsNumberText: {
       color: textColor,
       marginTop: 3,
+    },
+    filterIcon: {
+      width: 25,
+      alignItems: 'flex-end',
+    },
+    filterPopUp: {
+      position: 'absolute',
+      width: 200,
+      backgroundColor: primary,
+      height: 100,
+      top: -16,
+      borderWidth: 1,
+      borderColor: gray,
+      ...Platform.select({
+        ios: {
+          shadowColor: '#000',
+          shadowOffset: {width: 0, height: 2},
+          shadowOpacity: 0.8,
+          shadowRadius: 2,
+        },
+        android: {
+          elevation: 5,
+        },
+      }),
+      right: 0,
+      borderRadius: 8,
+      padding: 10,
+    },
+    filterOptionText: {color: textColor},
+    addButton: {
+      backgroundColor: accent,
+      width: 60,
+      height: 60,
+      position: 'absolute',
+      bottom: 6,
+      right: 2,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 30,
+      ...Platform.select({
+        ios: {
+          shadowColor: '#000',
+          shadowOffset: {width: 0, height: 2},
+          shadowOpacity: 0.8,
+          shadowRadius: 2,
+        },
+        android: {
+          elevation: 5,
+        },
+      }),
     },
   });
 };

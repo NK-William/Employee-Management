@@ -1,5 +1,12 @@
-import {View, Text, TextInput, FlatList, TouchableOpacity} from 'react-native';
-import React from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
+import React, {useState} from 'react';
 import getStyling from './style';
 import {accent, gray} from '../../constants/colors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -94,6 +101,7 @@ const fakeData: IEmployee[] = [
 
 const List = () => {
   const styles = getStyling();
+  const [showFilterPopUp, setShowFilterPopUp] = useState(false);
 
   const Search = () => {
     return (
@@ -112,16 +120,23 @@ const List = () => {
       <View style={styles.filterContainer}>
         <View style={styles.filterIconTextContainer}>
           <Text style={styles.filterText}>Filter by</Text>
-          <AntDesign
-            name="down"
-            size={21}
-            style={{color: accent, marginLeft: 8}}
-          />
-          {/* <Ionicons
-            name="close-outline"
-            size={23}
-            style={{color: accent, marginLeft: 8}}
-          /> */}
+          {showFilterPopUp ? (
+            <TouchableOpacity
+              style={styles.filterIcon}
+              onPress={() => setShowFilterPopUp(false)}>
+              <Ionicons
+                name="close-outline"
+                size={23}
+                style={{color: accent}}
+              />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.filterIcon}
+              onPress={() => setShowFilterPopUp(true)}>
+              <AntDesign name="down" size={21} style={{color: accent}} />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     );
@@ -143,7 +158,7 @@ const List = () => {
             style={
               styles.listItemDetailsNameText
             }>{`${firstName}  ${lastName}`}</Text>
-          <Text style={styles.listItemDetailsNumberText}>0711111111</Text>
+          <Text style={styles.listItemDetailsNumberText}>{contactNumber}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -165,6 +180,16 @@ const List = () => {
           keyExtractor={item => item.id}
           renderItem={({item}) => <ListItem item={item} />}
         />
+        {showFilterPopUp && (
+          <View style={styles.filterPopUp}>
+            <Text style={styles.filterOptionText}>Text here</Text>
+          </View>
+        )}
+        <View style={styles.addButton}>
+          <TouchableOpacity>
+            <Ionicons name="add" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );

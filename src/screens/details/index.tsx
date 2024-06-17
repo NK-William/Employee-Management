@@ -4,6 +4,7 @@ import getStyling from './style';
 import {TextEntry, DateEntry} from '../../components';
 import DatePicker from 'react-native-date-picker';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface ISkill {
   name: string;
@@ -111,6 +112,22 @@ const Details = () => {
     );
   };
 
+  const SubmitButton = () => {
+    return (
+      <View>
+        <View style={styles.submitButton}>
+          <Ionicons
+            name="add-circle-sharp"
+            size={30}
+            color="white"
+            style={styles.submitButtonIcon}
+          />
+          <Text style={styles.submitButtonText}>Save and Add Employee</Text>
+        </View>
+      </View>
+    );
+  };
+
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.titleText}>New Employee</Text>
@@ -173,7 +190,7 @@ const Details = () => {
         <Skill key={index} index={index} item={skill} />
       ))}
       <AddSkillButton />
-      <Button title="test" />
+      <SubmitButton />
     </ScrollView>
   );
 };

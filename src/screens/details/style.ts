@@ -36,6 +36,26 @@ const getStyling = () => {
     skillTrashIcon: {
       marginLeft: 10,
     },
+    submitButton: {
+      backgroundColor: accent,
+      position: 'relative',
+      borderRadius: 24,
+      paddingHorizontal: 10,
+      flexDirection: 'row',
+      height: 48,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 40,
+      marginBottom: 30,
+    },
+    submitButtonIcon: {
+      position: 'absolute',
+      left: 10,
+    },
+    submitButtonText: {
+      color: textColor,
+      fontWeight: 'bold',
+    },
   });
 };
 

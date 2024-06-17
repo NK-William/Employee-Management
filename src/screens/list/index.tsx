@@ -107,7 +107,7 @@ const List = () => {
     return (
       <View style={styles.searchContainer}>
         <TextInput
-          style={styles.searchText}
+          style={styles.entry}
           placeholder="Search"
           placeholderTextColor={gray}
         />

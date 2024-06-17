@@ -30,7 +30,7 @@ const getStyling = () => {
       borderRadius: 8,
       justifyContent: 'center',
     },
-    searchText: {
+    entry: {
       color: textColor,
     },
     filterIconTextContainer: {

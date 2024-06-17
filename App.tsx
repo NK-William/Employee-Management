@@ -5,7 +5,7 @@ import {List, Details} from './src/screens';
 const App = () => {
   return (
     <SafeAreaView style={{flex: 1}}>
-      <List />
+      <Details />
     </SafeAreaView>
   );
 };

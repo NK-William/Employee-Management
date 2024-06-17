@@ -1,4 +1,4 @@
-import {View, Text, ScrollView, TouchableOpacity, Button} from 'react-native';
+import {View, Text, ScrollView, TouchableOpacity, FlatList} from 'react-native';
 import React, {Key, useState} from 'react';
 import getStyling from './style';
 import {TextEntry, DateEntry} from '../../components';
@@ -8,6 +8,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Toast from 'react-native-toast-message';
 import {ISkill} from '../../interfaces/skill';
 import {IEmployee} from '../../interfaces/employee';
+import {storage} from '../../utils';
 
 const Details = () => {
   const styles = getStyling();
@@ -110,6 +111,25 @@ const Details = () => {
     };
 
     console.log(employee);
+
+    storage
+      .load({
+        key: 'employees',
+      })
+      .then((employees: IEmployee[]) => {
+        console.log('got prev employees');
+        storage.save({
+          key: 'employees',
+          data: [...employees, employee],
+        });
+      })
+      .catch(() => {
+        console.log('new employee');
+        storage.save({
+          key: 'employees',
+          data: [employee],
+        });
+      });
   };
 
   const skillsValid = () => {
@@ -143,6 +163,7 @@ const Details = () => {
   ) => {
     const newSkills = [...skills];
     newSkills[index][key] = value;
+    console.log(skills);
     setSkills(newSkills);
   };
 
@@ -300,6 +321,11 @@ const Details = () => {
       {skills.map((skill, index) => (
         <Skill key={index} index={index} item={skill} />
       ))}
+      {/* <FlatList
+        data={skills}
+        keyExtractor={index => index.toString()}
+        renderItem={({index, item}) => <Skill index={index} item={item} />}
+      /> */}
       <AddSkillButton />
       <SubmitButton />
     </ScrollView>

@@ -5,25 +5,29 @@ import {TextEntry, DateEntry} from '../../components';
 import DatePicker from 'react-native-date-picker';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
-interface ISkill {
-  name: string;
-  yearsExperience: string;
-  proficiency: string;
-}
+import Toast from 'react-native-toast-message';
+import {ISkill} from '../../interfaces/skill';
+import {IEmployee} from '../../interfaces/employee';
 
 const Details = () => {
   const styles = getStyling();
 
   const [dateModalOpen, setDateModalOpen] = useState(false);
-  const [date, setDate] = useState<Date | undefined>(undefined);
 
   const [skills, setSkills] = useState<ISkill[]>([
     {name: '', yearsExperience: '', proficiency: ''},
   ]);
 
-  console.log(skills);
-  console.log('Length: ' + skills.length);
+  // form fields
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [contactNumber, setContactNumber] = useState('');
+  const [emailAddress, setEmailAddress] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(undefined);
+  const [streetAddress, setStreetAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [country, setCountry] = useState('');
 
   const formatDate = (date: Date) => {
     const year = date.getFullYear();
@@ -33,14 +37,99 @@ const Details = () => {
     return `${year}-${month}-${day}`;
   };
 
-  const addSkill = () => {
+  const generateId = () => {
+    const uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const numbers = '0123456789';
+
+    let result = '';
+
+    // Generate 2 random uppercase letters
+    for (let i = 0; i < 2; i++) {
+      const randomIndex = Math.floor(Math.random() * uppercaseLetters.length);
+      result += uppercaseLetters[randomIndex];
+    }
+
+    // Generate 4 random numbers
+    for (let i = 0; i < 4; i++) {
+      const randomIndex = Math.floor(Math.random() * numbers.length);
+      result += numbers[randomIndex];
+    }
+
+    return result;
+  };
+
+  const formValid = () => {
+    if (
+      !skillsValid() ||
+      !firstName ||
+      !lastName ||
+      !contactNumber ||
+      !dateOfBirth ||
+      !streetAddress ||
+      !city ||
+      !postalCode ||
+      !country
+    ) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const onSubmit = () => {
+    if (!formValid()) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please fill in all fields',
+      });
+      return;
+    }
+
+    if (skills.length <= 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please fill in at least one skill',
+      });
+      return;
+    }
+
+    const employee: IEmployee = {
+      id: generateId(),
+      firstName,
+      lastName,
+      contactNumber,
+      emailAddress,
+      dateOfBirth,
+      streetAddress,
+      city,
+      postalCode,
+      country,
+      skills,
+    };
+
+    console.log(employee);
+  };
+
+  const skillsValid = () => {
     if (
       skills.length > 0 &&
       (skills[skills.length - 1].name === '' ||
         skills[skills.length - 1].yearsExperience === '' ||
         skills[skills.length - 1].proficiency === '')
-    ) {
-      console.log('Please fill in the current skill before adding a new one');
+    )
+      return false;
+    else return true;
+  };
+
+  const addSkill = () => {
+    if (!skillsValid()) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error adding skill',
+        text2: 'Please fill in the current skill before adding a new one',
+      });
       return;
     }
 
@@ -114,7 +203,7 @@ const Details = () => {
 
   const SubmitButton = () => {
     return (
-      <View>
+      <TouchableOpacity onPress={onSubmit}>
         <View style={styles.submitButton}>
           <Ionicons
             name="add-circle-sharp"
@@ -124,7 +213,7 @@ const Details = () => {
           />
           <Text style={styles.submitButtonText}>Save and Add Employee</Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -135,20 +224,28 @@ const Details = () => {
       <View style={{flexDirection: 'row'}}>
         <TextEntry
           title="First Name"
+          value={firstName}
+          onChangeText={setFirstName}
           containerStyle={{...styles.entry, marginRight: 5, flex: 1}}
         />
         <TextEntry
           title="Last Name"
+          value={lastName}
+          onChangeText={setLastName}
           containerStyle={{...styles.entry, marginLeft: 5, flex: 1}}
         />
       </View>
       <TextEntry
         title="Contact Number"
+        value={contactNumber}
+        onChangeText={setContactNumber}
         keyboardType="phone-pad"
         containerStyle={styles.entry}
       />
       <TextEntry
         keyboardType="email-address"
+        value={emailAddress}
+        onChangeText={setEmailAddress}
         title="Email Address"
         containerStyle={styles.entry}
       />
@@ -156,15 +253,15 @@ const Details = () => {
         title="Date of Birth"
         containerStyle={{...styles.entry, width: '50%'}}
         onPress={() => setDateModalOpen(true)}
-        date={date ? formatDate(date) : undefined}
+        date={dateOfBirth ? formatDate(dateOfBirth) : undefined}
       />
       <DatePicker
         modal
         open={dateModalOpen}
-        date={date ?? new Date()}
+        date={dateOfBirth ?? new Date()}
         onConfirm={date => {
           setDateModalOpen(false);
-          setDate(date);
+          setDateOfBirth(date);
         }}
         onCancel={() => {
           setDateModalOpen(false);
@@ -172,16 +269,30 @@ const Details = () => {
         mode="date"
       />
       <Text style={styles.subTitleText}>Address Info</Text>
-      <TextEntry title="Street Address" containerStyle={styles.entry} />
+      <TextEntry
+        title="Street Address"
+        value={streetAddress}
+        onChangeText={setStreetAddress}
+        containerStyle={styles.entry}
+      />
       <View style={{flexDirection: 'row'}}>
-        <TextEntry title="City" containerStyle={{...styles.entry, flex: 1}} />
         <TextEntry
-          title="Last Name"
+          title="City"
+          value={city}
+          onChangeText={setCity}
+          containerStyle={{...styles.entry, flex: 1}}
+        />
+        <TextEntry
+          title="Postal Code"
+          value={postalCode}
+          onChangeText={setPostalCode}
           keyboardType="number-pad"
           containerStyle={{...styles.entry, marginHorizontal: 10, flex: 1}}
         />
         <TextEntry
           title="Country"
+          value={country}
+          onChangeText={setCountry}
           containerStyle={{...styles.entry, flex: 1}}
         />
       </View>

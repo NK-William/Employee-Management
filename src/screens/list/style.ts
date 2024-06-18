@@ -134,6 +134,30 @@ const getStyling = () => {
         },
       }),
     },
+    emptyListContainer: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      flex: 1,
+    },
+    image: {
+      height: 250,
+    },
+    emptyText1: {
+      color: textColor,
+      fontSize: 18,
+      marginTop: 20,
+    },
+    emptyText2: {
+      textAlign: 'center',
+      color: textColor,
+      fontSize: 16,
+      marginTop: 25,
+    },
+    emptyTextPlus: {
+      color: textColor,
+      fontSize: 20,
+      fontWeight: 'bold',
+    },
   });
 };
 

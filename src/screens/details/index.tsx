@@ -130,6 +130,12 @@ const Details = () => {
           data: [employee],
         });
       });
+
+    Toast.show({
+      type: 'success',
+      text1: 'Employee added',
+      text2: `${firstName} ${lastName} has been added to the list of employees`,
+    });
   };
 
   const skillsValid = () => {

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import getStyling from './style';
 import {accent, gray} from '../../constants/colors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -14,17 +14,20 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {IEmployee} from '../../interfaces/employee';
 import {storage} from '../../utils';
+import {useFocusEffect} from '@react-navigation/native';
 
 const List = ({navigation}: any) => {
   const styles = getStyling();
   const [showFilterPopUp, setShowFilterPopUp] = useState(false);
   const [employees, setEmployees] = useState<IEmployee[]>([]);
 
-  useEffect(() => {
-    storage.load({key: 'employees'}).then((employees: IEmployee[]) => {
-      setEmployees(employees);
-    });
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      storage.load({key: 'employees'}).then((employees: IEmployee[]) => {
+        setEmployees(employees);
+      });
+    }, []),
+  );
 
   const deleteEmployee = (id: string) => {
     const newEmployees = employees.filter(employee => employee.id !== id);

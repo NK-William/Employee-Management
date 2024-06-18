@@ -205,6 +205,8 @@ const Details = ({navigation, route}: any) => {
       text1: 'Employee added',
       text2: `${firstName} ${lastName} has been added to the list of employees`,
     });
+
+    navigation.goBack();
   };
 
   const skillsValid = () => {

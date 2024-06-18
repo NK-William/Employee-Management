@@ -4,13 +4,13 @@ import {
   TextInput,
   FlatList,
   TouchableOpacity,
-  Platform,
   Image,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import getStyling from './style';
 import {accent, gray} from '../../constants/colors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {IEmployee} from '../../interfaces/employee';
 import {storage} from '../../utils';
@@ -25,6 +25,12 @@ const List = ({navigation}: any) => {
       setEmployees(employees);
     });
   }, []);
+
+  const deleteEmployee = (id: string) => {
+    const newEmployees = employees.filter(employee => employee.id !== id);
+    storage.save({key: 'employees', data: newEmployees});
+    setEmployees(newEmployees);
+  };
 
   const Search = () => {
     return (
@@ -82,7 +88,7 @@ const List = ({navigation}: any) => {
   };
 
   const ListItem = ({item}: {item: IEmployee}) => {
-    const {firstName, lastName, contactNumber} = item;
+    const {id, firstName, lastName, contactNumber} = item;
 
     return (
       <TouchableOpacity
@@ -103,6 +109,9 @@ const List = ({navigation}: any) => {
             }>{`${firstName}  ${lastName}`}</Text>
           <Text style={styles.listItemDetailsNumberText}>{contactNumber}</Text>
         </View>
+        <TouchableOpacity onPress={() => deleteEmployee(id)}>
+          <FontAwesome name="trash" size={20} color="white" />
+        </TouchableOpacity>
       </TouchableOpacity>
     );
   };

@@ -1,16 +1,21 @@
 import {View, Text, ScrollView, TouchableOpacity, FlatList} from 'react-native';
-import React, {Key, useState} from 'react';
+import React, {Key, useEffect, useState} from 'react';
 import getStyling from './style';
 import {TextEntry, DateEntry} from '../../components';
 import DatePicker from 'react-native-date-picker';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Entypo from 'react-native-vector-icons/Entypo';
 import Toast from 'react-native-toast-message';
 import {ISkill} from '../../interfaces/skill';
 import {IEmployee} from '../../interfaces/employee';
 import {storage} from '../../utils';
 
-const Details = () => {
+const Details = ({navigation, route}: any) => {
+  const editEmployee = route.params?.employee;
+
+  console.log('route.params?.employee: ', route.params?.employee);
+
   const styles = getStyling();
 
   const [dateModalOpen, setDateModalOpen] = useState(false);
@@ -29,6 +34,70 @@ const Details = () => {
   const [city, setCity] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [country, setCountry] = useState('');
+
+  if (editEmployee) {
+    useEffect(() => {
+      setFirstName(editEmployee.firstName);
+      setLastName(editEmployee.lastName);
+      setContactNumber(editEmployee.contactNumber);
+      setEmailAddress(editEmployee.emailAddress);
+      setDateOfBirth(new Date(editEmployee.dateOfBirth));
+      setStreetAddress(editEmployee.streetAddress);
+      setCity(editEmployee.city);
+      setPostalCode(editEmployee.postalCode);
+      setCountry(editEmployee.country);
+      setSkills(editEmployee.skills);
+    }, []);
+
+    useEffect(() => {
+      const skillsChanged = editEmployee.skills.some((skill: ISkill) => {
+        // console.log('Skill: ', skill);
+        const foundChangedSkill = skills.find((displayedSkill: ISkill) => {
+          // console.log('Displayed Skill: ', displayedSkill);
+          return (
+            displayedSkill.name === skill.name &&
+            displayedSkill.yearsExperience === skill.yearsExperience &&
+            displayedSkill.proficiency === skill.proficiency
+          );
+        });
+
+        return !foundChangedSkill;
+      });
+
+      // console.log('Skill changed: ', skillsChanged);
+
+      if (
+        firstName !== editEmployee.firstName ||
+        lastName !== editEmployee.lastName ||
+        contactNumber !== editEmployee.contactNumber ||
+        emailAddress !== editEmployee.emailAddress ||
+        !dateOfBirth ||
+        formatDate(dateOfBirth) !==
+          formatDate(new Date(editEmployee.dateOfBirth)) ||
+        streetAddress !== editEmployee.streetAddress ||
+        city !== editEmployee.city ||
+        postalCode !== editEmployee.postalCode ||
+        country !== editEmployee.country
+      ) {
+        // setEditFormChanged(true);
+        console.log('changed');
+      } else {
+        // setEditFormChanged(false);
+        console.log('not changed');
+      }
+    }, [
+      firstName,
+      lastName,
+      contactNumber,
+      emailAddress,
+      dateOfBirth,
+      streetAddress,
+      city,
+      postalCode,
+      country,
+      ...skills,
+    ]);
+  }
 
   const formatDate = (date: Date) => {
     const year = date.getFullYear();
@@ -169,7 +238,6 @@ const Details = () => {
   ) => {
     const newSkills = [...skills];
     newSkills[index][key] = value;
-    console.log(skills);
     setSkills(newSkills);
   };
 
@@ -233,12 +301,16 @@ const Details = () => {
       <TouchableOpacity onPress={onSubmit}>
         <View style={styles.submitButton}>
           <Ionicons
-            name="add-circle-sharp"
-            size={30}
+            name={editEmployee ? 'pencil' : 'add-circle-sharp'}
+            size={editEmployee ? 22 : 30}
             color="white"
             style={styles.submitButtonIcon}
           />
-          <Text style={styles.submitButtonText}>Save and Add Employee</Text>
+          <Text style={styles.submitButtonText}>
+            {editEmployee
+              ? 'Save changes to Employee'
+              : 'Save and Add Employee'}
+          </Text>
         </View>
       </TouchableOpacity>
     );
@@ -246,7 +318,9 @@ const Details = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.titleText}>New Employee</Text>
+      <Text style={styles.titleText}>
+        {editEmployee ? 'Edit Employees' : 'New Employee'}
+      </Text>
       <Text style={styles.subTitleText}>Basic Info</Text>
       <View style={{flexDirection: 'row'}}>
         <TextEntry

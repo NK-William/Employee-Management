@@ -99,7 +99,7 @@ const fakeData: IEmployee[] = [
   },
 ];
 
-const List = () => {
+const List = ({navigation}: any) => {
   const styles = getStyling();
   const [showFilterPopUp, setShowFilterPopUp] = useState(false);
 
@@ -146,7 +146,11 @@ const List = () => {
     const {firstName, lastName, contactNumber} = item;
 
     return (
-      <TouchableOpacity style={styles.listItemContainer}>
+      <TouchableOpacity
+        style={styles.listItemContainer}
+        onPress={() => {
+          navigation.navigate('Details', {item});
+        }}>
         <View style={styles.listItemNumberContainer}>
           <View style={styles.listItemNumberCircle}>
             <Text style={styles.listItemNumber}>1</Text>

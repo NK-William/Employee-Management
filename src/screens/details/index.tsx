@@ -126,6 +126,12 @@ const Details = ({navigation, route}: any) => {
     return result;
   };
 
+  const phoneNumberValid = (number: string): boolean => {
+    const phoneRegex = /^[+]?[0-9]{10,15}$/;
+    console.log('Phone number valid: ', phoneRegex.test(number));
+    return phoneRegex.test(number);
+  };
+
   const formValid = () => {
     if (
       !skillsValid() ||
@@ -159,6 +165,15 @@ const Details = ({navigation, route}: any) => {
         type: 'error',
         text1: 'Error',
         text2: 'Please fill in at least one skill',
+      });
+      return;
+    }
+
+    if (!phoneNumberValid(contactNumber)) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please enter valid phone number',
       });
       return;
     }

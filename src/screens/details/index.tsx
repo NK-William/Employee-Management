@@ -14,8 +14,6 @@ import {storage} from '../../utils';
 const Details = ({navigation, route}: any) => {
   const editEmployee = route.params?.employee;
 
-  console.log('route.params?.employee: ', route.params?.employee);
-
   const styles = getStyling();
 
   const [dateModalOpen, setDateModalOpen] = useState(false);
@@ -23,6 +21,8 @@ const Details = ({navigation, route}: any) => {
   const [skills, setSkills] = useState<ISkill[]>([
     {name: '', yearsExperience: '', proficiency: ''},
   ]);
+
+  const [editChanges, setEditChanges] = useState(false);
 
   // form fields
   const [firstName, setFirstName] = useState('');
@@ -50,19 +50,19 @@ const Details = ({navigation, route}: any) => {
     }, []);
 
     useEffect(() => {
-      const skillsChanged = editEmployee.skills.some((skill: ISkill) => {
-        // console.log('Skill: ', skill);
-        const foundChangedSkill = skills.find((displayedSkill: ISkill) => {
-          // console.log('Displayed Skill: ', displayedSkill);
-          return (
-            displayedSkill.name === skill.name &&
-            displayedSkill.yearsExperience === skill.yearsExperience &&
-            displayedSkill.proficiency === skill.proficiency
-          );
-        });
+      // const skillsChanged = editEmployee.skills.some((skill: ISkill) => {
+      //   // console.log('Skill: ', skill);
+      //   const foundChangedSkill = skills.find((displayedSkill: ISkill) => {
+      //     // console.log('Displayed Skill: ', displayedSkill);
+      //     return (
+      //       displayedSkill.name === skill.name &&
+      //       displayedSkill.yearsExperience === skill.yearsExperience &&
+      //       displayedSkill.proficiency === skill.proficiency
+      //     );
+      //   });
 
-        return !foundChangedSkill;
-      });
+      //   return !foundChangedSkill;
+      // });
 
       // console.log('Skill changed: ', skillsChanged);
 
@@ -79,11 +79,9 @@ const Details = ({navigation, route}: any) => {
         postalCode !== editEmployee.postalCode ||
         country !== editEmployee.country
       ) {
-        // setEditFormChanged(true);
-        console.log('changed');
+        setEditChanges(true);
       } else {
-        // setEditFormChanged(false);
-        console.log('not changed');
+        setEditChanges(false);
       }
     }, [
       firstName,
@@ -179,33 +177,57 @@ const Details = ({navigation, route}: any) => {
       skills,
     };
 
-    console.log(employee);
+    if (editEmployee) saveEditedEmployee(employee);
+    else saveNewEmployee(employee);
+  };
 
+  const saveNewEmployee = (employee: IEmployee) => {
     storage
       .load({
         key: 'employees',
       })
       .then((employees: IEmployee[]) => {
-        console.log('got prev employees');
         storage.save({
           key: 'employees',
           data: [...employees, employee],
         });
       })
       .catch(() => {
-        console.log('new employee');
         storage.save({
           key: 'employees',
           data: [employee],
         });
-      });
+      })
+      .finally(() => {
+        Toast.show({
+          type: 'success',
+          text1: 'Employee added',
+          text2: `${firstName} ${lastName} has been added to the list of employees`,
+        });
 
-    Toast.show({
-      type: 'success',
-      text1: 'Employee added',
-      text2: `${firstName} ${lastName} has been added to the list of employees`,
+        navigation.goBack();
+      });
+  };
+
+  const saveEditedEmployee = async (employee: IEmployee) => {
+    const employees = await storage.load({
+      key: 'employees',
     });
 
+    const updatedEmployees = employees.map((e: IEmployee) => {
+      if (e.id === editEmployee.id) {
+        return employee;
+      } else {
+        return e;
+      }
+    });
+
+    await storage.save({key: 'employees', data: updatedEmployees});
+    Toast.show({
+      type: 'success',
+      text1: 'Employee changed',
+      text2: `${firstName} ${lastName} has been changed successfully`,
+    });
     navigation.goBack();
   };
 
@@ -299,21 +321,21 @@ const Details = ({navigation, route}: any) => {
   };
 
   const SubmitButton = () => {
+    const editDisabled = editEmployee && !editChanges;
     return (
-      <TouchableOpacity onPress={onSubmit}>
-        <View style={styles.submitButton}>
-          <Ionicons
-            name={editEmployee ? 'pencil' : 'add-circle-sharp'}
-            size={editEmployee ? 22 : 30}
-            color="white"
-            style={styles.submitButtonIcon}
-          />
-          <Text style={styles.submitButtonText}>
-            {editEmployee
-              ? 'Save changes to Employee'
-              : 'Save and Add Employee'}
-          </Text>
-        </View>
+      <TouchableOpacity
+        disabled={editDisabled}
+        onPress={onSubmit}
+        style={{...styles.submitButton, opacity: editDisabled ? 0.15 : 1}}>
+        <Ionicons
+          name={editEmployee ? 'pencil' : 'add-circle-sharp'}
+          size={editEmployee ? 22 : 30}
+          color="white"
+          style={styles.submitButtonIcon}
+        />
+        <Text style={styles.submitButtonText}>
+          {editEmployee ? 'Save changes to Employee' : 'Save and Add Employee'}
+        </Text>
       </TouchableOpacity>
     );
   };

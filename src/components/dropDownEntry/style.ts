@@ -1,11 +1,11 @@
 import {Platform, StyleProp, StyleSheet, ViewStyle} from 'react-native';
-import {gray, textColor} from '../../constants/colors';
+import {gray, primary, textColor} from '../../constants/colors';
 import {flatten} from '../../utils';
 
 const getStyling = (containerStyle: StyleProp<ViewStyle>) => {
   return StyleSheet.create({
     Container: flatten([{}, containerStyle]),
-    dateContainer: {
+    dropDownContainer: {
       backgroundColor: gray,
       borderRadius: 8,
       height: 40,
@@ -19,10 +19,24 @@ const getStyling = (containerStyle: StyleProp<ViewStyle>) => {
       fontWeight: 'bold',
       marginBottom: 6,
     },
-    date: {
+    value: {
       color: textColor,
     },
-    icon: {},
+    optionsContainer: {
+      borderWidth: 0,
+      borderColor: 'white',
+      backgroundColor: gray,
+      borderRadius: 8,
+      marginTop: -12,
+      minHeight: 40,
+      paddingHorizontal: 8,
+      paddingTop: 4,
+      width: '100%',
+    },
+    optionText: {
+      color: textColor,
+      paddingBottom: 4,
+    },
   });
 };
 

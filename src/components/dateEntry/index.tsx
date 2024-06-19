@@ -4,7 +4,7 @@ import {IDateEntry} from './interface';
 import getStyling from './style';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 
-const dateEntry: FC<IDateEntry> = props => {
+const DateEntry: FC<IDateEntry> = props => {
   const {title, containerStyle, date} = props;
   const styles = getStyling(containerStyle);
   return (
@@ -20,4 +20,4 @@ const dateEntry: FC<IDateEntry> = props => {
   );
 };
 
-export default dateEntry;
+export default DateEntry;

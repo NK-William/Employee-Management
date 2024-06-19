@@ -10,6 +10,7 @@ import Toast from 'react-native-toast-message';
 import {ISkill} from '../../interfaces/skill';
 import {IEmployee} from '../../interfaces/employee';
 import {storage} from '../../utils';
+import DropDownEntry from '../../components/dropDownEntry';
 
 const Details = ({navigation, route}: any) => {
   const editEmployee = route.params?.employee;
@@ -274,6 +275,10 @@ const Details = ({navigation, route}: any) => {
   const Skill = ({index, item}: {index: number; item: ISkill}) => {
     const {name, yearsExperience, proficiency} = item;
 
+    const options = ['Beginner', 'Intermediate', 'Senior'].filter(
+      p => p !== proficiency,
+    );
+
     return (
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <TextEntry
@@ -291,11 +296,12 @@ const Details = ({navigation, route}: any) => {
           onChangeText={text => updateSkill(index, 'yearsExperience', text)}
           containerStyle={{...styles.entry, marginHorizontal: 10, flex: 1}}
         />
-        <TextEntry
+        <DropDownEntry
           title="Seniority Rating"
           value={proficiency}
           hideTitle={index !== 0}
-          onChangeText={text => updateSkill(index, 'proficiency', text)}
+          options={options}
+          onOptionSelect={option => updateSkill(index, 'proficiency', option)}
           containerStyle={{...styles.entry, flex: 2.2}}
         />
         <TouchableOpacity onPress={() => deleteSkill(index)}>

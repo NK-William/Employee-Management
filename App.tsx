@@ -4,7 +4,7 @@ import {List, Details} from './src/screens';
 import Toast from 'react-native-toast-message';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {primary, primaryDark, textColor} from './src/constants/colors';
+import {primaryDark, textColor} from './src/constants/colors';
 
 const Stack = createNativeStackNavigator();
 

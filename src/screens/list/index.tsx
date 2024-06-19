@@ -53,8 +53,6 @@ const List = ({navigation}: any) => {
     }, []),
   );
 
-  console.log('re-render');
-
   const deleteEmployee = (id: string) => {
     const newEmployees = employees.filter(employee => employee.id !== id);
     storage.save({key: 'employees', data: newEmployees});

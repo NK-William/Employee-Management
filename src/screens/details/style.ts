@@ -1,4 +1,4 @@
-import {Platform, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {accent, gray, primary, textColor} from '../../constants/colors';
 
 const getStyling = () => {

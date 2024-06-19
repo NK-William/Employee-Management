@@ -132,6 +132,11 @@ const Details = ({navigation, route}: any) => {
     return phoneRegex.test(number);
   };
 
+  const emailValid = (email: string): boolean => {
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return regex.test(email);
+  };
+
   const formValid = () => {
     if (
       !skillsValid() ||
@@ -173,7 +178,16 @@ const Details = ({navigation, route}: any) => {
       Toast.show({
         type: 'error',
         text1: 'Error',
-        text2: 'Please enter valid phone number',
+        text2: 'Please enter a valid phone number',
+      });
+      return;
+    }
+
+    if (!emailValid(emailAddress)) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please enter a valid email address',
       });
       return;
     }

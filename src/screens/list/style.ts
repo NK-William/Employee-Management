@@ -36,10 +36,15 @@ const getStyling = () => {
     filterIconTextContainer: {
       flexDirection: 'row',
       alignItems: 'center',
+      justifyContent: 'center',
+    },
+    selectedFilterText: {
+      color: textColor,
     },
     filterContainer: {
       justifyContent: 'center',
       marginLeft: 12,
+      width: 120,
     },
     filterText: {
       color: textColor,
@@ -53,7 +58,7 @@ const getStyling = () => {
     listItemContainer: {
       backgroundColor: gray,
       marginTop: 8,
-      height: 50,
+      height: 55,
       paddingHorizontal: 10,
       alignItems: 'center',
       borderRadius: 8,
@@ -92,8 +97,8 @@ const getStyling = () => {
       position: 'absolute',
       width: 200,
       backgroundColor: primary,
-      height: 100,
-      top: -16,
+      minHeight: 100,
+      top: -10,
       borderWidth: 1,
       borderColor: gray,
       ...Platform.select({
@@ -110,8 +115,9 @@ const getStyling = () => {
       right: 0,
       borderRadius: 8,
       padding: 10,
+      paddingBottom: 5,
     },
-    filterOptionText: {color: textColor},
+    filterOptionText: {color: textColor, paddingBottom: 5},
     addButton: {
       backgroundColor: accent,
       width: 60,

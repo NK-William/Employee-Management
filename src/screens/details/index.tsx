@@ -51,21 +51,19 @@ const Details = ({navigation, route}: any) => {
     }, []);
 
     useEffect(() => {
-      // const skillsChanged = editEmployee.skills.some((skill: ISkill) => {
-      //   // console.log('Skill: ', skill);
-      //   const foundChangedSkill = skills.find((displayedSkill: ISkill) => {
-      //     // console.log('Displayed Skill: ', displayedSkill);
-      //     return (
-      //       displayedSkill.name === skill.name &&
-      //       displayedSkill.yearsExperience === skill.yearsExperience &&
-      //       displayedSkill.proficiency === skill.proficiency
-      //     );
-      //   });
+      const skillsChanged = editEmployee.skills.some((skill: ISkill) => {
+        const foundChangedSkill = skills.find((displayedSkill: ISkill) => {
+          return (
+            displayedSkill.name === skill.name &&
+            displayedSkill.yearsExperience === skill.yearsExperience &&
+            displayedSkill.proficiency === skill.proficiency
+          );
+        });
 
-      //   return !foundChangedSkill;
-      // });
+        return !foundChangedSkill;
+      });
 
-      // console.log('Skill changed: ', skillsChanged);
+      console.log('Skill changed: ', skillsChanged);
 
       if (
         firstName !== editEmployee.firstName ||
@@ -78,7 +76,8 @@ const Details = ({navigation, route}: any) => {
         streetAddress !== editEmployee.streetAddress ||
         city !== editEmployee.city ||
         postalCode !== editEmployee.postalCode ||
-        country !== editEmployee.country
+        country !== editEmployee.country ||
+        skillsChanged
       ) {
         setEditChanges(true);
       } else {
@@ -94,7 +93,7 @@ const Details = ({navigation, route}: any) => {
       city,
       postalCode,
       country,
-      ...skills,
+      [JSON.stringify(skills)],
     ]);
   }
 

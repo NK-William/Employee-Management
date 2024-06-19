@@ -109,7 +109,6 @@ export const useDetails = (navigation: any, editEmployee: any) => {
 
   const phoneNumberValid = (number: string): boolean => {
     const phoneRegex = /^[+]?[0-9]{10,15}$/;
-    console.log('Phone number valid: ', phoneRegex.test(number));
     return phoneRegex.test(number);
   };
 

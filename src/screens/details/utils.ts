@@ -3,6 +3,8 @@ import {ISkill} from '../../interfaces/skill';
 import Toast from 'react-native-toast-message';
 import {IEmployee} from '../../interfaces/employee';
 import {storage} from '../../utils';
+import mockApiServices from '../../services/mockApiServices';
+import apiService from '../../services/apiService';
 
 export const useDetails = (navigation: any, editEmployee: any) => {
   const [dateModalOpen, setDateModalOpen] = useState(false);
@@ -191,53 +193,65 @@ export const useDetails = (navigation: any, editEmployee: any) => {
   };
 
   const saveNewEmployee = (employee: IEmployee) => {
-    storage
-      .load({
-        key: 'employees',
-      })
-      .then((employees: IEmployee[]) => {
-        storage.save({
-          key: 'employees',
-          data: [...employees, employee],
-        });
-      })
-      .catch(() => {
-        storage.save({
-          key: 'employees',
-          data: [employee],
-        });
-      })
-      .finally(() => {
+    // Mock API
+    // mockApiServices.saveEmployee(employee).then(e => {
+    //   if (e) {
+    //     Toast.show({
+    //       type: 'success',
+    //       text1: 'Employee added',
+    //       text2: `${firstName} ${lastName} has been added to the list of employees`,
+    //     });
+    //     navigation.goBack();
+    //   } else {
+    //     Toast.show({
+    //       type: 'error',
+    //       text1: 'Error',
+    //       text2: 'An error occurred while adding the employee',
+    //     });
+    //   }
+    // })
+
+    apiService.saveEmployee(employee).then(e => {
+      if (e) {
         Toast.show({
           type: 'success',
           text1: 'Employee added',
           text2: `${firstName} ${lastName} has been added to the list of employees`,
         });
-
         navigation.goBack();
-      });
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'An error occurred while adding the employee',
+        });
+      }
+    });
   };
 
   const saveEditedEmployee = async (employee: IEmployee) => {
-    const employees = await storage.load({
-      key: 'employees',
-    });
+    // Mock API
+    // mockApiServices.updateEmployee(editEmployee).then(updated => {
+    //       if (updated) {
+    //         Toast.show({
+    //           type: 'success',
+    //           text1: 'Employee changed',
+    //           text2: `${firstName} ${lastName} has been changed successfully`,
+    //         });
+    //         navigation.goBack();
+    //       }
+    //     });
 
-    const updatedEmployees = employees.map((e: IEmployee) => {
-      if (e.id === editEmployee.id) {
-        return employee;
-      } else {
-        return e;
+    apiService.updateEmployee(employee, editEmployee).then(updated => {
+      if (updated) {
+        Toast.show({
+          type: 'success',
+          text1: 'Employee changed',
+          text2: `${firstName} ${lastName} has been changed successfully`,
+        });
+        navigation.goBack();
       }
     });
-
-    await storage.save({key: 'employees', data: updatedEmployees});
-    Toast.show({
-      type: 'success',
-      text1: 'Employee changed',
-      text2: `${firstName} ${lastName} has been changed successfully`,
-    });
-    navigation.goBack();
   };
 
   const skillsValid = () => {

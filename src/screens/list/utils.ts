@@ -2,6 +2,8 @@ import {useCallback, useState} from 'react';
 import {IEmployee} from '../../interfaces/employee';
 import {useFocusEffect} from '@react-navigation/native';
 import {storage} from '../../utils';
+import apiService from '../../services/apiService';
+import mockApiServices from '../../services/mockApiServices';
 
 const allFilterOptions = [
   'All employees',
@@ -31,7 +33,14 @@ export const useList = () => {
   useFocusEffect(
     useCallback(() => {
       showFilterPopUp && setShowFilterPopUp(false);
-      storage.load({key: 'employees'}).then((employees: IEmployee[]) => {
+
+      // Mock API
+      //   mockApiServices.getEmployees().then(employees => {
+      //     setEmployees(employees);
+      //     setDisplayedEmployees(employees);
+      //   });
+
+      apiService.getEmployees().then(employees => {
         setEmployees(employees);
         setDisplayedEmployees(employees);
       });
@@ -40,10 +49,16 @@ export const useList = () => {
   );
 
   const deleteEmployee = (id: string) => {
-    const newEmployees = employees.filter(employee => employee.id !== id);
-    storage.save({key: 'employees', data: newEmployees});
-    setEmployees(newEmployees);
-    setDisplayedEmployees(newEmployees);
+    // Mock API
+    // mockApiServices.deleteEmployee(id).then(newEmployees => {
+    //   setEmployees(newEmployees);
+    //   setDisplayedEmployees(newEmployees);
+    // });
+
+    apiService.deleteEmployee(id).then(newEmployees => {
+      setEmployees(newEmployees);
+      setDisplayedEmployees(newEmployees);
+    });
   };
 
   const applyFilter = (option: string) => {
